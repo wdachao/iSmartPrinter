@@ -6,21 +6,74 @@
   <title>iSmart Printer打印机App下载</title>
   <script>
     function redirectToStore() {
-      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      var ua = navigator.userAgent || navigator.vendor || window.opera;
 
-      if (/iPhone|iPad|iPod/i.test(userAgent)) {
-        window.location.href = "https://apps.apple.com/cn/app/ismart-printer/id6754624213";
-      } else if (/Android/i.test(userAgent)) {
-        window.location.href = "https://play.google.com/store/apps/details?id=com.iSmart.printer.oem";
-      } else {
-        window.location.href = "https://fir.xcxwo.com/iSmartPrinter";
+      var iosUrl = "https://apps.apple.com/cn/app/ismart-printer/id6754624213";
+
+      // Android
+      var pkg = "com.iSmart.printer.oem";
+      var gpUrl = "https://play.google.com/store/apps/details?id=" + pkg;
+
+      // intent 方式：会尝试用 com.android.vending 打开 Play
+      // 注意：#Intent;...;end 这段必须保持这种格式
+      var intentUrl =
+        "intent://details?id=" + pkg +
+        "#Intent;scheme=market;package=com.android.vending;end";
+
+      // 你的兜底下载页
+      var fallbackUrl = "https://fir.xcxwo.com/iSmartPrinter";
+
+      if (/iPhone|iPad|iPod/i.test(ua)) {
+        window.location.href = iosUrl;
+        return;
       }
+
+      if (/Android/i.test(ua)) {
+        // 记录是否发生过“页面被隐藏/切走”，用于判断是否成功拉起
+        var leftPage = false;
+
+        var onVis = function () {
+          if (document.hidden) leftPage = true;
+        };
+        document.addEventListener("visibilitychange", onVis, { passive: true });
+
+        // 兜底：若没有切走页面，说明 intent / gp 没成功，跳转 fallback
+        var timer = setTimeout(function () {
+          document.removeEventListener("visibilitychange", onVis);
+
+          if (!leftPage) {
+            window.location.href = fallbackUrl;
+          }
+        }, 1500);
+
+        // 先尝试 intent://
+        try {
+          window.location.href = intentUrl;
+        } catch (e) {
+          // intent 不支持则降级到 https 的 Google Play
+          window.location.href = gpUrl;
+        }
+
+        // 再做一层：部分浏览器直接忽略 intent，这里 300ms 后尝试 gpUrl（不影响已成功拉起的情况）
+        setTimeout(function () {
+          if (!leftPage) {
+            // 尝试打开 Google Play 网页版
+            window.location.href = gpUrl;
+          }
+        }, 300);
+
+        return;
+      }
+
+      // 非 iOS/Android：直接去兜底页
+      window.location.href = fallbackUrl;
     }
+
     window.onload = redirectToStore;
   </script>
 </head>
 <body>
-  <h1>欢迎使用iSmart Printer</h1>
-  <p id="message">您的设备将会自动跳转至相应下载页面。</p>
+  <h1>欢迎使用 iSmart Printer</h1>
+  <p>正在为您跳转到下载页面...</p>
 </body>
 </html>
