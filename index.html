@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iSmart Printer打印机App下载</title>
-    <script>
-        function redirectToStore() {
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            if (/iPhone|iPad|iPod/i.test(userAgent)) {
-                // 用户设备为 iOS
-                window.location.href = "https://apps.apple.com/cn/app/ismart-printer/id6754624213";
-            } else if (/Android/i.test(userAgent)) {
-                // 用户设备为 Android
-                window.location.href = "https://play.google.com/store/apps/details?id=com.iSmart.printer.oem";
-            } else {
-                // 如果设备既不是 iOS 也不是 Android，可以提供一个提示或其它操作
-                document.getElementById('message').innerHTML = "无法识别您的设备，请访问 Apple Store 或 Google Play 下载应用。";
-            }
-        }
-        window.onload = redirectToStore;
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iSmart Printer打印机App下载</title>
+  <script>
+    function redirectToStore() {
+      var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+      if (/iPhone|iPad|iPod/i.test(userAgent)) {
+        window.location.href = "https://apps.apple.com/cn/app/ismart-printer/id6754624213";
+      } else if (/Android/i.test(userAgent)) {
+        window.location.href = "https://play.google.com/store/apps/details?id=com.iSmart.printer.oem";
+      } else {
+        window.location.href = "https://fir.xcxwo.com/iSmartPrinter";
+      }
+    }
+    window.onload = redirectToStore;
+  </script>
 </head>
 <body>
-    <h1>欢迎使用iSmart Printer</h1>
-    <p id="message">您的设备将会自动跳转至相应商店下载应用。</p>
+  <h1>欢迎使用iSmart Printer</h1>
+  <p id="message">您的设备将会自动跳转至相应下载页面。</p>
 </body>
 </html>
-
